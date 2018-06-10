@@ -42,12 +42,12 @@ curl -d @flag -m 2 --retry 2 -s http://127.0.0.1:62088/flagx
 ## 显示flag
 ### 显示每个IP最新的flag  
 多次接收到同一个IP的不同flag，仅显示最后一个flag  
-HTML  http://127.0.0.1:62088/secret/static/givemeflag/index.html  
+HTML  http://127.0.0.1:62088/secret/static/index.html  
 json  http://127.0.0.1:62088/secret/showflagjson  
 
 ### 显示接收到的所有flag   
 多次接收到同一个IP的同一个flag，时间为第一次接收的时间  
-HTML  http://127.0.0.1:62088/secret/static/givemeflag/showallflag.html  
+HTML  http://127.0.0.1:62088/secret/static/showallflag.html  
 txt   http://127.0.0.1:62088/secret/showallflag  
 json  http://127.0.0.1:62088/secret/showallflagjson  
 
