@@ -1,0 +1,126 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie6"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+
+    <script>
+      document.documentElement.className=document.documentElement.className.replace('no-js','js');
+    </script>
+
+    <meta charset="utf-8">
+    <title>BasicGrid Demo - Static Data</title>
+
+    <!-- <link href="../css/basicgrid.css" rel="stylesheet"> -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+
+    <style type="text/css">
+      /*.table-wrap: {*/
+      #demo {
+        width: 80%;
+        margin: 20px auto;
+
+      }
+    </style>
+
+</head>
+
+<body>
+
+  <div class="table-wrap">
+
+    <table id="demo" class="table table-striped table-bordered table-condensed">
+
+    </table>
+    <div id="page"></div>
+
+    <button id="clear">Clear Body</button>
+    <button id="reload">Reload</button>
+    <button id="selectedItems">Get Selected Items</button>
+
+  </div>
+
+  <script src="../lib/jquery-1.7.2.js"></script>
+  <script src="../src/basicgrid.js"></script>
+
+  <script>
+    $(function() {
+      var $demo = $('#demo');
+
+
+      var grid = $demo.basicGrid({
+        //data: staticData,
+        url: 'page-data.json',
+        //hidden: true,
+
+        pagination: true,
+        //pageEl: '#page',
+
+        keys: {
+          id: 'ID',
+          page: 'currentPage',
+          total: 'totalRecords',
+          rows: 'rows',
+        },
+
+        //rowNumCol: false,
+        colModel: [
+          {text: '列1', index: 'CODE', headCls: 'abc', headStyle: 'background-color: red'},
+          {text: '列2', index: 'NAME', hidden: false},
+          {text: '列5', index: 'MEMO'},
+          {text: '列3', index: 'PCODE', formatter: function(tableData, rowData, index, cellData) {
+            // console.log(index);
+            // console.log(rowData);
+              return '<b>' + cellData + '</b>';
+          }},
+          {text: '列4', index: 'PNAME'},
+          {text: '列5', index: 'PMEMO'}
+        ]
+      });
+      //console.log(grid[0].tableId);
+
+
+      $('#clear').click(function() {
+        console.log(this);
+        // $('#demo').remove('tbody');
+        $('#demo').empty();
+        $('#demo').hide();
+        console.log('remove...');
+      });
+
+      $('#reload').click(function() {
+        $demo.basicGrid('reload');
+      });
+
+      $('#selectedItems').click(function() {
+        var ids = $demo.basicGrid('getSelectedItems');
+        console.log(ids);
+        // console.log($('.cb-row:checked'))
+      });
+      console.log($demo.basicGrid('version'));
+
+      $('#demo').bind('headClick', function(e, model, el) {
+        console.log(e);
+        console.log(model);
+        console.log(el);
+      });
+
+      $('#demo').bind('cellClick', function(e, model, rowsData, rowData, cellData, el) {
+        console.log(e);
+        console.log(model);
+        console.log(rowsData);
+        console.log(rowData);
+        console.log(cellData);
+        console.log(el);
+      });
+
+      $('#demo').bind('pageNumberClick', function(e, page) {
+        console.log(page)
+      })
+      //console.log($demo.basicGrid('showTable'));
+    })
+
+  </script>
+</body>
+</html>

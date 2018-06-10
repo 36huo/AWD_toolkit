@@ -1,0 +1,85 @@
+.basicGrid {
+	/*border: 1px solid #ccc;*/
+}
+.basicGrid thead .rownum {
+	width: 20px;
+	text-align: right;
+	/* background-color: #eee; */
+}
+.basicGrid tbody .rownum {
+	/* background-color: #eee; */
+	text-align: right;
+	padding-right: 5px;
+	font-size: 9px;
+	vertical-align: bottom;
+}
+.basicGrid thead .th-cb-all {
+	width: 20px;
+	text-align: center;
+}
+.basicGrid tbody .td-cb-row {
+	text-align: center;
+}
+.basicGrid .empty-tbody {
+	text-align: center;
+}
+
+/**
+ * 交叉行颜色
+ */
+.basicGrid .alt-row-color {
+	/*background-color: #ccc;*/
+}
+
+/**
+ * 选中后行上的样式
+ */
+.basicGrid .tr-cb-row-active, .basicGrid .tr-cb-row-active .rownum {
+	/* background-color: green; */
+}
+/**
+ * 选中后复选框所在 td 的样式
+ */
+.basicGrid .td-cb-row-active {
+
+}
+
+/**
+ * 右栏用来做修改、删除操作
+ */
+.basicGrid .opt-head {
+	width: 100px;
+}
+.basicGrid .item-opt {
+	display: none;
+}
+.basicGrid .row-hover .item-opt {
+	display: block;
+}
+
+.basicGrid .item-opt-modify {
+	margin-right: 10px;
+}
+
+/**
+ * pager
+ */
+.basicGridPagebar {
+	margin-bottom: 18px;
+}
+.basicGridPagebar .pageinfo {
+	float: left;
+	width: 200px;
+	padding: 5px 0 0 10px;
+}
+.basicGridPagebar .pagination {
+	float: right;
+	margin: 0;
+}
+.basicGridPagebar .pagination .page-loading {
+	background: url(../img/loading.gif) no-repeat;
+	vertical-align: 0;
+	padding: 10px;
+	margin-right: 20px;
+
+}

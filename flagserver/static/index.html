@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flag都到碗里来</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="static/vendors/element-ui/index.css">
+</head>
+<body>
+  <div id="app">
+    <el-card class="box-card" style="max-width: 750px; margin: 20px auto">
+      <div slot="header" class="clearfix">
+        <el-row :gutter="20">
+          <el-col :span="12"><div style="line-height: 40px">Flag 都到碗里来</div></el-col>
+          <el-col :span="12"><el-input v-model="search" placeholder="搜索"></el-input></el-col>
+        </el-row>
+        
+      </div>
+       <el-table
+          :data="tableData"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="flag"
+            sortable
+            label="Flag">
+          </el-table-column>
+          <el-table-column
+            prop="ip"
+            sortable
+            width="180px"
+            label="IP">
+          </el-table-column>
+          <el-table-column
+            prop="datetime"
+            sortable
+            width="180px"
+            label="时间">
+          </el-table-column>
+        </el-table>
+    </el-card>
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="static/vendors/vue.min.js"></script>
+  <script src="static/vendors/axios.min.js"></script>
+  <!-- import JavaScript -->
+  <script src="static/vendors/element-ui/index.js"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: function() {
+        return { 
+          search: '',
+          tableData: [],
+          bakTableData: []
+        }
+      },
+      methods: {
+        getFlagJson: function () {
+          var self = this
+          // 这里加上随机数，避免缓存
+          axios.get('../../showflagjson?_t=' + Math.random())
+          .then(function (response) {
+            if (typeof response.data === 'string') {
+              try {
+                response.data = JSON.parse(response.data)
+              } catch (e) {
+                console.log(e)
+              }
+            }
+
+            for (var i = 0; i < response.data.length; i++) {
+              response.data[i]['datetime'] = self.ts2DateStr(response.data[i]['timestamp'] * 1000)
+            }
+
+            response.data.sort(function(a, b) {  
+                // 大的排在前面
+                return b.timestamp - a.timestamp
+            });  
+  
+            self.tableData = response.data
+            self.bakTableData = self.tableData
+            console.log(self.tableData)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        },
+        ts2DateStr: function (ts) {
+            var date = new Date(ts);
+
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+            hour = (hour < 10 ? "0" : "") + hour;
+            min = (min < 10 ? "0" : "") + min;
+            sec = (sec < 10 ? "0" : "") + sec;
+
+            var str = date.getFullYear() + "-" + month + "-" + day + " " +  hour + ":" + min + ":" + sec;
+            return str;
+        },
+      },
+      watch: {
+        search (newVlaue, oldValue) {
+          newVlaue = newVlaue.trim()
+          if (newVlaue === '') {
+            this.tableData = this.bakTableData
+          } else {
+            let tmpTableData = [];
+            for (var i = 0; i < this.bakTableData.length; i++) {
+              var item = this.bakTableData[i];
+              for (var k in item) {
+                if ((item[k] + '').indexOf(newVlaue) >= 0) {
+                    tmpTableData.push(item);
+                    break;
+                }
+              }
+            }
+            this.tableData = tmpTableData;
+          }
+        }
+      }
+    })
+
+    app.getFlagJson()
+    // 10 秒自动刷新
+    setInterval(function (argument) {
+      try {
+        app.getFlagJson()
+      } catch (e) {
+        alert(e)
+      }
+    }, 5*1000)
+  </script>
+</html>
