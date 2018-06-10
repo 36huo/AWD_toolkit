@@ -71,7 +71,7 @@
         getFlagJson: function () {
           var self = this
           // 这里加上随机数，避免缓存
-          axios.get('../../showallflagjson?_t=' + Math.random())
+          axios.get('../showallflagjson?_t=' + Math.random())
           .then(function (response) {
             if (typeof response.data === 'string') {
               try {

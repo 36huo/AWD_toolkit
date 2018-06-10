@@ -64,7 +64,7 @@ class flag_auto_submit_class(object):
 
     def getflags(self):
         c = self.con.cursor()
-        cursor = c.execute("select id,ip,flag from flag_submit where submitted<=2 order by submitted ")
+        cursor = c.execute("select id,ip,flag,submitted from flag_submit where submitted<=2 order by submitted ")
         rows = cursor.fetchall()
         return rows
 
@@ -114,7 +114,7 @@ class flag_auto_submit_class(object):
             #去数据库读取 尚未提交的flag
             flags=self.getflags()
             for flag in flags:
-                # print(flag,flag['flag'])
+                print('now submit flag:',flag)
 
                 # 生成wget命令，并执行
                 output=''
@@ -122,13 +122,20 @@ class flag_auto_submit_class(object):
                     output=subprocess.check_output(self.creat_payload(self.flag_submit_request_file,flag['flag'],flag['ip']),shell=True)
                 except:
                     continue
-                #print(flag['id'],flag['ip'],flag['flag'],output)
-                # 如果wget命令执行成功，则将数据库里该条记录设置为已提交
-                param=[int(time.time()),output,flag['id']]
-                self.con.execute("UPDATE flag_submit set submitted=submitted+1,submit_time=?,comments=? where id=?",param)
-                self.con.commit()
+                # 如果是windows平台，由于sqlite conn时为独占模式，无法两个进程同步更新或者插入，则调用平台接口更新flag状态。linux 则无需，直接update数据库
+                if sys.platform == 'win32':
+                    try:
+                        output=subprocess.check_output("wget -O- -T 2 -t 1 -q http://127.0.0.1:62088/secret/updateflagstatus/%d" % flag['id'],shell=True)
+                    except:
+                        continue
+                else:
+                    # 如果wget命令执行成功，则将数据库里该条记录设置为已提交
+                    param=[int(time.time()),output,flag['id']]
+                    self.con.execute("UPDATE flag_submit set submitted=submitted+1,submit_time=?,comments=? where id=?",param)
+                    self.con.commit()
                 # logger.info(str(flag['id'])+","+flag['ip']+","+flag['flag']+","+output)
                 logger.info("ip: %s, flag: %s, http_respons_len: %i" % (flag['ip'],flag['flag'],len(output)))
+
                 time.sleep(self.sleep_time+0.5)
             time.sleep(1.5)
 

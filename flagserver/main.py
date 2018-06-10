@@ -142,6 +142,15 @@ def showallflagjson():
         flags.append(row)
     return json.dumps(flags)
 
+@route('/%s/updateflagstatus/<id>' % secret_key)
+def updateflagstatu(id):
+    param=[int(time.time()),'',id]
+    con.execute("UPDATE flag_submit set submitted=submitted+1,submit_time=?,comments=? where id=?",param)
+    con.commit()
+    con.commit()
+    return 'update id:%s OK' % id
+
+
 # subprocess.Popen(os.environ['_'] + ' '+os.path.join(BASE_PATH, "flag_auto_submit.py"),shell=True)
 # print("/secret_key/static/givemeflag/showallflag.html")
 run(host='0.0.0.0', port=62088, threaded=True)
