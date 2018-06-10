@@ -66,3 +66,6 @@ rm -f db.db
 1. 请抓取flag提交时的http请求到flag_submit_request.txt，并将其中的ip和flag部分替换为 {ip}、{flag}  。  
 1. flag自动提交模块，将会从数据库flag_submit表(该表中存放接收到的所有不重复的flag，时间为第一次接收到的时间)中，取出提交次数小于等于3次进行提交（可自行修改sql语句进行更改）。  
 1. 脚本会自动替换flag_submit_request.txt 中的{ip}、{flag}为ip 和 flag 进行提交。   
+
+由于windows下db文件连接为独占模式，将windows下直接update数据库，改为了调用flagserver web接口(新增了updateflagstatus接口)来update。方法很low，一点都不优雅。
+
